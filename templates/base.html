@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Library DBMS</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<aside>
+    <h2>Library DBMS</h2>
+    <small>CPS510 · Assignment 9</small>
+
+    <a href="{{ url_for('home') }}">Dashboard</a>
+    {% if tables %}
+    <a href="{{ url_for('reports.reports') }}">Query tables</a>
+
+    <h4>Manage records</h4>
+
+    {% for t in tables %}
+        <a href="{{ url_for('records.records', table=t) }}">
+            {{ t.replace('_', ' ').title() }}
+        </a>
+    {% endfor %}
+    {% endif %}
+</aside>
+
+<main>
+
+    <header>
+        <span>LIBRARY MANAGEMENT SYSTEM</span>
+
+        {% if tables %}
+        <form method="post" action="{{ url_for('login.exit_app') }}">
+            <input type="hidden" name="csrf" value="{{ session.csrf }}">
+            <button>Exit</button>
+        </form>
+        {% endif %}
+    </header>
+
+    {% for m in get_flashed_messages() %}
+        <p class="notice">{{ m }}</p>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+
+</main>
+
+</body>
+</html>

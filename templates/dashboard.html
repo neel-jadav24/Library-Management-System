@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Library dashboard</h1>
+<p>
+    Manage your Oracle database,
+    catalog and member records.
+</p>
+<div class="cards">
+    {% for a, label in actions %}
+        <form class="card" action="{{ url_for('tables.admin', action=a) }}" method="post">
+            <input type="hidden" name="csrf" value="{{ session.csrf }}">
+            <h2>{{ label }}</h2>
+            <p>{{ descriptions[a] }}</p>
+            {% if a == 'drop' %}
+                <label>
+                    <input type="checkbox" name="confirm" required>
+                    Confirm permanent deletion
+                </label>
+            {% endif %}
+            <button>{{ label }}</button>
+        </form>
+    {% endfor %}
+    <a class="card" href="/reports">
+        <h2>Query tables</h2>
+        Run library reports →
+    </a>
+</div>
+<h2>Database tables</h2>
+<div class="cards">
+    {% for t in tables %}
+        <a class="card" href="{{ url_for('records.records', table=t) }}">
+            {{ t.replace('_', ' ').title() }} →
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

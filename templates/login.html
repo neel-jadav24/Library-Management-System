@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Oracle login</h1>
+<p>
+    Connect to TMU Oracle.
+    Connect to the university VPN first.
+</p>
+<form method="post" class="card fields" style="max-width:480px">
+    <input type="hidden" name="csrf" value="{{ session.csrf }}">
+    <label>
+        Oracle username
+        <input name="username" required autocomplete="username">
+    </label>
+    <label>
+        Password
+        <input type="password" name="password" required autocomplete="current-password">
+    </label>
+    <button>Connect</button>
+</form>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ table.replace('_', ' ').title() }}</h1>
+<form method="get" class="search">
+    <input name="q" value="{{ search }}" placeholder="Search any column">
+    <button>Search</button>
+    <a href="?">Clear</a>
+</form>
+<details class="card">
+    <summary>Add record</summary>
+    <form method="post" class="fields">
+        <input type="hidden" name="csrf" value="{{ session.csrf }}">
+        <input type="hidden" name="action" value="insert">
+        {% for c, k, n in meta %}
+            <label>
+                {{ c }}
+                <input name="{{ c }}" placeholder="{{ 'YYYY-MM-DD' if k == 'DATE' else '' }}" {% if n == 'N' %}required{% endif %}>
+            </label>
+        {% endfor %}
+        <button>Add record</button>
+    </form>
+</details>
+<div class="scroll">
+    <table>
+        <tr>
+            {% for c in names %}
+                <th>{{ c }}</th>
+            {% endfor %}
+            <th>Actions</th>
+        </tr>
+        {% for r in rows %}
+            <tr>
+                {% for c in names %}
+                    <td>{{ r[c] }}</td>
+                {% endfor %}
+                <td>
+                    <details>
+                        <summary>Edit / delete</summary>
+                        <form method="post" class="fields">
+                            <input type="hidden" name="csrf" value="{{ session.csrf }}">
+                            {% for c in keys %}
+                                <input type="hidden" name="old{{ c }}" value="{{ r[c] }}">
+                            {% endfor %}
+                            {% for c, k, n in meta %}
+                                <label>
+                                    {{ c }}
+                                    <input name="{{ c }}" value="{{ r[c] }}" {% if n == 'N' %}required{% endif %}>
+                                </label>
+                            {% endfor %}
+                            <button name="action" value="update">
+                                Save
+                            </button>
+                            <button class="danger" name="action" value="delete" onclick="return confirm('Delete this record?')">
+                                Delete
+                            </button>
+                        </form>
+                    </details>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<p>{{ rows | length }} records</p>
+{% endblock %}

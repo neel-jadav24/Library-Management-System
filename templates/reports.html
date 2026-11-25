@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Query tables</h1>
+<form method="get">
+    <select name="report">
+        {% for r in reports %}
+            <option
+                {% if r == selected %}selected{% endif %}>
+                {{ r }}
+            </option>
+        {% endfor %}
+    </select>
+    <button>Run query</button>
+</form>
+{% if selected %}
+    <h2>{{ selected }}</h2>
+    <pre>{{ sql }}</pre>
+    <div class="scroll">
+        <table>
+            <tr>
+                {% for c in names %}
+                    <th>{{ c }}</th>
+                {% endfor %}
+            </tr>
+            {% for r in rows %}
+                <tr>
+                    {% for v in r %}
+                        <td>
+                            {{ '' if v is none else v }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}
+{% endblock %}
